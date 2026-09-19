@@ -129,7 +129,11 @@ export default function Home() {
           {/* Mobile disclosure — no JavaScript */}
           <details className="menu relative lg:hidden">
             <summary
-              className="flex h-[37px] w-[50px] flex-col items-center justify-center gap-[8.5px]"
+              /* 7px gaps put the three 1px rules exactly 8px apart. A pitch
+                 that is a multiple of 4 lands on whole device pixels at 125,
+                 150, 175 and 200% display scaling, so all three rules render
+                 with identical weight instead of one dark and one pale. */
+              className="flex h-[37px] w-[50px] flex-col items-center justify-center gap-[7px]"
               aria-label="Menu"
             >
               <span className="burger-open block h-px w-[35px] bg-ink" />
