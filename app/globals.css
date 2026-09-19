@@ -1,0 +1,255 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   PART 1 — UI replication of conejovalleycounseling.com/home
+
+   Every value below was read off the live reference at a true 1440px
+   viewport (Squarespace scales its type fluidly, so measurements taken at a
+   narrower window give the wrong numbers).
+
+     h1 59.928/75.174   h2 47.832/61.876   h3 39.192/51.796   h4 27.096/36.872
+     body 16.728/30.110 · label 15/27 (0.12em) · small 13.272 (0.1em)
+     button 12.408 (0.12em)
+   All headings sit at -0.01em tracking.
+   ========================================================================== */
+@theme {
+  /* --- Reference palette ------------------------------------------------ */
+  --color-cream: #f6f4ee; /* page background */
+  --color-white: #ffffff; /* alternating sections */
+  --color-sand: #e3d9ca; /* "How we work" band */
+  --color-ink: #2b2b2b; /* headings and body copy */
+  --color-teal: #86b3b3; /* accent — script words, utility bar */
+  --color-rule: #515151; /* underline on link-buttons */
+
+  /* --- Type families ----------------------------------------------------
+     Headings use Beaufort Pro Light, the reference's own heading face and
+     weight, and the accent words use Gardena Holmes Script; both load from
+     public/font. Mulish is the open-source cut of the reference's Muli, so
+     the body text is an exact match. */
+  --font-display: var(--font-beaufort), Georgia, "Times New Roman", serif;
+  --font-body: var(--font-mulish), ui-sans-serif, system-ui, sans-serif;
+  --font-script: var(--font-gardena), "Brush Script MT", cursive;
+
+  /* --- Type scale --------------------------------------------------------
+     Headings and body interpolate between the reference's 753px and 1440px
+     values, so the clone scales the way the original does. */
+  --text-h1: clamp(2.35rem, 2.045rem + 1.889vw, 3.7455rem); /* → 59.928px */
+  --text-h2: clamp(1.95rem, 1.747rem + 1.381vw, 2.9895rem); /* → 47.832px */
+  --text-h3: clamp(1.7rem, 1.534rem + 1.017vw, 2.4495rem); /* → 39.192px */
+  --text-h4: 1.6935rem; /* 27.096px — fixed on the reference */
+  --text-body: clamp(0.9375rem, 0.819rem + 0.2515vw, 1.0455rem); /* → 16.728px */
+  --text-label: 0.9375rem; /* 15px — uppercase labels */
+  --text-small: 0.8295rem; /* 13.272px — nav, dropdowns, expertise list */
+  --text-btn: 0.7755rem; /* 12.408px — buttons */
+}
+
+/* Phones held upright: the reference switches to a formula driven by the
+   viewport HEIGHT — (size − 1) × 1.2% of min(100vh, 900px) + 15px — using
+   its size values h1 3.6, h2 2.9, h3 2.4, h4 1.7, body 1.1, button 0.85.
+   At 390×844 this gives h1 41.33, h2 34.24, h4 22.09, body 16.01. */
+@media (max-width: 767px) and (orientation: portrait) {
+  :root {
+    --text-h1: calc(2.6 * 0.012 * min(100vh, 900px) + 15px);
+    --text-h2: calc(1.9 * 0.012 * min(100vh, 900px) + 15px);
+    --text-h3: calc(1.4 * 0.012 * min(100vh, 900px) + 15px);
+    --text-h4: calc(0.7 * 0.012 * min(100vh, 900px) + 15px);
+    --text-body: calc(0.1 * 0.012 * min(100vh, 900px) + 15px);
+    --text-btn: calc(15px - 0.15 * 0.012 * min(100vh, 900px));
+  }
+}
+
+/* --- Base ----------------------------------------------------------------
+   Inside @layer base on purpose: unlayered rules outrank every Tailwind
+   layer, which would stop utilities like `text-cream` on the dark band from
+   overriding the default heading colour. */
+@layer base {
+  body {
+    background: var(--color-cream);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    font-size: var(--text-body);
+    line-height: 1.8;
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 300;
+    letter-spacing: -0.01em;
+  }
+
+  h1 {
+    font-size: var(--text-h1);
+    line-height: 1.2544;
+  }
+  h2 {
+    font-size: var(--text-h2);
+    line-height: 1.2936;
+  }
+  h3 {
+    font-size: var(--text-h3);
+    line-height: 1.3216;
+  }
+  h4 {
+    font-size: var(--text-h4);
+    line-height: 1.3608;
+  }
+
+  a {
+    color: inherit;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-teal);
+    outline-offset: 3px;
+  }
+}
+
+/* --- Components ---------------------------------------------------------- */
+@layer components {
+  /* Uppercase label — the reference's "large + bold italic" paragraph.
+     15px / 27px / 1.8px tracking. */
+  .eyebrow {
+    /* Also used on footer <h2>s, which would otherwise take the heading face. */
+    font-family: var(--font-body);
+    font-size: var(--text-label);
+    line-height: 1.8;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 400;
+  }
+
+  /* Nav links, dropdown items and the expertise list all share this. */
+  .label-sm {
+    font-size: var(--text-small);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 400;
+    line-height: 1.3;
+  }
+
+  /* The handwritten accent inside a heading. The reference sets its
+     PrintedMoments at 1em with 0.7em leading; Gardena Holmes is narrower
+     per em, and 1.44em matches the reference's word widths (e.g. "thrive"
+     162.9px in the 1440px hero). The tight leading keeps the large script
+     from stretching the heading's line box. */
+  .script-accent {
+    font-family: var(--font-script);
+    font-size: 1.44em;
+    letter-spacing: 0;
+    line-height: 0.7;
+    color: var(--color-teal);
+    font-style: normal;
+  }
+
+  /* Underlined uppercase link-button. As on the reference, the underline is
+     a separate line that retracts to its left end over 1s on hover (the text
+     itself never dims) and grows back when the pointer leaves. The
+     transparent border keeps the 1px slot the line sits in. */
+  .btn-underline {
+    position: relative;
+    display: inline-block;
+    padding: 9px 0;
+    font-size: var(--text-btn);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 400;
+    border-bottom: 1px solid transparent;
+  }
+  .btn-underline::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    border-bottom: 1px solid var(--color-rule);
+    transition: right 1s ease;
+  }
+  .btn-underline:hover::before {
+    right: 100%;
+  }
+  /* In the stacked (non-desktop) layout the reference's buttons are a
+     tight 35px tall (18px padding + 1px line + 16px text), not the body
+     line-height. */
+  @media (width < 64rem) {
+    .btn-underline {
+      line-height: 1.19;
+    }
+  }
+
+  /* The header CONTACT control and the BOOK NOW button. The reference uses
+     border-radius: 100%, which draws a true ellipse rather than a
+     stadium/pill, and fills it in on hover. */
+  .btn-oval {
+    display: inline-block;
+    border: 1px solid var(--color-ink);
+    border-radius: 100%;
+    padding: 15px 19.5px;
+    font-size: var(--text-btn);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 400;
+    line-height: normal;
+    transition:
+      background-color 0.1s linear,
+      color 0.1s linear;
+  }
+  .btn-oval:hover {
+    background: var(--color-ink);
+    color: var(--color-cream);
+  }
+}
+
+/* --- Nav dropdowns -------------------------------------------------------
+   Hover and keyboard-focus driven, no JavaScript. Matches the reference:
+   cream panel, right-aligned, no shadow or radius. */
+/* Invisible bridge so the pointer can travel from the link to the panel
+   without passing over a dead gap. */
+.nav-folder > .nav-panel::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: 100%;
+  height: 18px;
+}
+
+.nav-folder > .nav-panel {
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition:
+    opacity 0.22s ease,
+    transform 0.22s ease,
+    visibility 0.22s;
+}
+.nav-folder:hover > .nav-panel,
+.nav-folder:focus-within > .nav-panel {
+  visibility: visible;
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-underline::before {
+    transition: none;
+  }
+}
+
+/* --- Mobile disclosure menu — CSS only, no JavaScript -------------------- */
+.menu > summary {
+  list-style: none;
+  cursor: pointer;
+}
+.menu > summary::-webkit-details-marker {
+  display: none;
+}
+.menu[open] .burger-open {
+  display: none;
+}
+.menu:not([open]) .burger-close {
+  display: none;
+}
