@@ -94,8 +94,17 @@ viewport — measuring in a narrower window returns the mobile sizes.
 | nav, dropdowns, expertise list | 13.272 | body | 0.1em, uppercase |
 | buttons | 12.408 | body | 0.12em, uppercase |
 
-Headings and body interpolate with `clamp()` between the reference's 753px
-and 1440px values, so the clone scales the way the original does.
+The values above are at 1440px. At other widths the clone uses the
+reference's own formula — `min((size − 1) × 1.2vw + 15px, max((size − 1) ×
+21.6px + 15px, size × 15px))` with its sizes h1 3.6, h2 2.9, h3 2.4, h4 1.7,
+body 1.1 — so text grows with the window up to 1800px, matching the original
+at every width (h1 54.94px at 1280, 71.16px at 1920).
+
+The desktop layout scales the same way: widths track the window, heights and
+vertical gaps follow the reference's grid rows (2.15% of `min(90vw, 1800px)`
+plus fixed 11px gaps), and sections keep the reference's minimum heights. The
+whole page stays within about 2% of the original's height from 1280px to
+1920px wide.
 
 On phones held upright the reference switches to a formula driven by the
 viewport **height** — `(size − 1) × 1.2% of min(100vh, 900px) + 15px` — and
@@ -106,9 +115,16 @@ and body 16.01px, exactly as on the original.
 
 | Reference | Used here | Notes |
 |---|---|---|
-| Beaufort Pro 300 | **Beaufort Pro Light** | The same face and weight, loaded from `public/font` with `next/font/local`. Every heading breaks across the same lines as the original. |
-| Muli | **Mulish** 300/400 | The open-source cut of the same face — an exact match, via `next/font/google`. |
-| PrintedMoments | **Gardena Holmes Script** | PrintedMoments sits at `1em` and is unusually wide for its em; Gardena is set at `1.44em`, which brings each accent word to within a few percent of the original's width ("thrive" 168px against 163px). |
+| Beaufort Pro 300 | **Beaufort Pro Light** | Same face and weight. |
+| Muli | **Muli** (variable, 200–900) | Same face. |
+| PrintedMoments | **PrintedMoments** | Same face, set exactly as the reference: `1em`, no tracking, `0.7em` leading. |
+
+All three load from `public/font` with `next/font/local`. Every heading breaks
+across the same lines as the original.
+
+The reference's copy also has a few doubled spaces — before each handwritten
+word, for example — which Squarespace keeps visible. They are reproduced, so
+the gap before *thrive* matches to the pixel.
 
 ## Details reproduced
 
@@ -155,7 +171,7 @@ app/
   page.tsx                the replication
   ParallaxBackground.tsx  the quote band's scroll effect
 public/images/            the reference site's assets
-public/font/              Beaufort Pro Light, Gardena Holmes Script
+public/font/              Beaufort Pro Light, Muli, PrintedMoments
 ```
 
 ## Attribution
@@ -166,8 +182,7 @@ They appear here only to demonstrate the UI replication step the assignment
 brief asks for. No claim is made to them, and the site is served
 `noindex, nofollow` so it can never compete with the original in search.
 
-Mulish is served through `next/font/google` under the
-[SIL Open Font License](https://scripts.sil.org/OFL). Beaufort Pro is a
-commercial typeface by Shinn Type Foundry, and the Gardena Holmes Script
-demo is free for personal use only; both are included for this
-non-commercial assignment.
+Muli is released under the
+[SIL Open Font License](https://scripts.sil.org/OFL). Beaufort Pro (Shinn
+Type Foundry) and PrintedMoments (PeachCreme) are commercial typefaces,
+included only for this non-commercial assignment.

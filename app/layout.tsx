@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Mulish } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
 
@@ -14,22 +13,23 @@ const beaufort = localFont({
   adjustFontFallback: "Times New Roman",
 });
 
-/* Gardena Holmes Script — handwritten accent words ("thrive", "help", …),
-   standing in for the reference's PrintedMoments. */
-const gardena = localFont({
-  src: "../public/font/fonts/Gardena Holmes Script DEMO.otf",
+/* PrintedMoments — the reference's handwritten accent face ("thrive",
+   "help", …). */
+const printedMoments = localFont({
+  src: "../public/font/fonts/printedmoments-webfont.woff",
   weight: "400",
   style: "normal",
-  variable: "--font-gardena",
+  variable: "--font-printed-moments",
   display: "swap",
   adjustFontFallback: false,
 });
 
-/* Mulish is the open-source cut of Muli, the reference site's UI face. */
-const mulish = Mulish({
-  subsets: ["latin"],
-  weight: ["300", "400", "600"],
-  variable: "--font-mulish",
+/* Muli — the reference's body and UI face, as a variable font (200–900). */
+const muli = localFont({
+  src: "../public/font/fonts/latin.woff2",
+  weight: "200 900",
+  style: "normal",
+  variable: "--font-muli",
   display: "swap",
 });
 
@@ -50,7 +50,7 @@ export default function RootLayout({
        --font-display/body/script on :root — can resolve them. */
     <html
       lang="en"
-      className={`${beaufort.variable} ${mulish.variable} ${gardena.variable}`}
+      className={`${beaufort.variable} ${muli.variable} ${printedMoments.variable}`}
     >
       <body className="antialiased">{children}</body>
     </html>
