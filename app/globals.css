@@ -254,17 +254,16 @@
   }
 }
 
-/* --- Mobile disclosure menu — CSS only, no JavaScript -------------------- */
-.menu > summary {
-  list-style: none;
-  cursor: pointer;
-}
-.menu > summary::-webkit-details-marker {
-  display: none;
-}
-.menu[open] .burger-open {
-  display: none;
-}
-.menu:not([open]) .burger-close {
-  display: none;
+/* --- Mobile menu --------------------------------------------------------
+   Rows in the reference's full-screen menu: Muli at 8.5vw on 18.5vw rows,
+   uppercase with 1.92px tracking (33.15px at a 390px screen, 37.4px at
+   440px). */
+.menu-item {
+  font-family: var(--font-body);
+  font-size: 8.5vw;
+  line-height: 1;
+  letter-spacing: 1.92px;
+  text-transform: uppercase;
+  font-weight: 400;
+  color: var(--color-ink);
 }

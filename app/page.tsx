@@ -1,5 +1,6 @@
 import Image from "next/image";
 import type { ReactNode } from "react";
+import MobileMenu from "./MobileMenu";
 import ParallaxBackground from "./ParallaxBackground";
 
 /**
@@ -12,10 +13,9 @@ import ParallaxBackground from "./ParallaxBackground";
  * Copy and photography belong to the reference site and are used only for this
  * replication exercise. They are replaced in Part 2.
  *
- * Static page — no added sections, no added functionality. The mobile menu is
- * a CSS-only <details> disclosure, so this stays a server component; the only
- * client JavaScript is the quote band's scroll parallax, which the reference
- * has too.
+ * Static page — no added sections, no added functionality. It stays a server
+ * component; the only client JavaScript is the quote band's scroll parallax
+ * and the mobile menu, both of which the reference has too.
  */
 
 type NavItem = { label: string; items?: string[] };
@@ -85,7 +85,12 @@ export default function Home() {
       {/* ── Header ─────────────────────────────────────────────── */}
       <header className="absolute inset-x-0 top-0 z-50">
         <div className="flex items-center justify-between p-[6vw] lg:px-[5vw] lg:py-[1.4vw]">
-          <a href="#top" aria-label="Conejo Valley Family Counseling — home">
+          {/* Above the mobile menu's overlay, which the logo sits over. */}
+          <a
+            href="#top"
+            aria-label="Conejo Valley Family Counseling — home"
+            className="relative z-50"
+          >
             <Image
               src="/images/logo.png"
               alt="Conejo Valley Family Counseling"
@@ -126,38 +131,7 @@ export default function Home() {
             </a>
           </nav>
 
-          {/* Mobile disclosure — no JavaScript */}
-          <details className="menu relative lg:hidden">
-            <summary
-              /* 7px gaps put the three 1px rules exactly 8px apart. A pitch
-                 that is a multiple of 4 lands on whole device pixels at 125,
-                 150, 175 and 200% display scaling, so all three rules render
-                 with identical weight instead of one dark and one pale. */
-              className="flex h-[37px] w-[50px] flex-col items-center justify-center gap-[7px]"
-              aria-label="Menu"
-            >
-              <span className="burger-open block h-px w-[35px] bg-ink" />
-              <span className="burger-open block h-px w-[35px] bg-ink" />
-              <span className="burger-open block h-px w-[35px] bg-ink" />
-              <span className="burger-close block text-2xl font-light leading-none">
-                ×
-              </span>
-            </summary>
-            <nav
-              className="absolute right-0 top-12 w-[15rem] bg-cream p-6 shadow-lg"
-              aria-label="Mobile"
-            >
-              {[...NAV.map((n) => n.label), "Contact"].map((item) => (
-                <a
-                  key={item}
-                  href="#"
-                  className="label-sm block border-b border-sand py-3 last:border-0"
-                >
-                  {item}
-                </a>
-              ))}
-            </nav>
-          </details>
+          <MobileMenu nav={NAV} />
         </div>
       </header>
 
