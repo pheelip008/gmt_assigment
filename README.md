@@ -1,6 +1,6 @@
 # Conejo Valley Family Counseling — Homepage Clone
 
-A pixel-accurate clone of the [Conejo Valley Family Counseling](https://www.conejovalleycounseling.com/home) homepage, built as **Part 1** of the Grow My Therapy front-end internship assignment.
+A clone of the [Conejo Valley Family Counseling](https://www.conejovalleycounseling.com/home) homepage, built as the Grow My Therapy front-end internship assignment.
 
 > **Stack:** Next.js 16 (App Router) · React 19 · Tailwind CSS v4 · TypeScript
 
