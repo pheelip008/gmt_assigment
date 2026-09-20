@@ -13,11 +13,14 @@ import { useEffect, useState } from "react";
 
 type NavItem = { label: string; items?: string[] };
 
-/* Tailwind v4 writes rotate/translate as their own properties, so the
-   transition has to name them — otherwise the X would snap into place.
-   Timing is the reference's: 0.25s cubic-bezier(0.2, 0.6, 0.3, 1). */
+/* The reference's own burger: three 1px rules centred in a 35px box, the
+   outer two held ±9.5px apart. Opening shrinks them to 28px and spins them
+   -135°/135° (nudged 3.5px right so they stay centred as they shorten) while
+   the middle one scales to nothing. Tailwind v4 writes rotate/translate/scale
+   as their own properties, so the transition names them; the timing is the
+   reference's 250ms cubic-bezier(0.2, 0.6, 0.3, 1). */
 const BAR =
-  "block h-px bg-ink transition-[rotate,translate,width,opacity] duration-[150ms] ease-[cubic-bezier(0.2,0.6,0.3,1)]";
+  "absolute inset-y-0 left-0 m-auto block h-px bg-ink transition-[rotate,translate,scale,width] duration-[250ms] ease-[cubic-bezier(0.2,0.6,0.3,1)]";
 
 function Chevron({ back = false }: { back?: boolean }) {
   return (
@@ -67,13 +70,27 @@ export default function MobileMenu({ nav }: { nav: NavItem[] }) {
         /* While open the button goes fixed — at the same spot it occupies in
            the header, 16.5px below the padding to sit level with the 70px
            logo — so it stays reachable if the page was scrolled. */
-        className={`flex h-[37px] w-[50px] flex-col items-center justify-center gap-[9px] ${
+        className={`flex h-[37px] w-[50px] items-center justify-center ${
           open ? "fixed right-[6vw] top-[calc(6vw+16.5px)] z-50" : "relative z-50"
         }`}
       >
-        <span className={`${BAR} ${open ? "w-[29px] translate-y-[10px] -rotate-45" : "w-[35px]"}`} />
-        <span className={`${BAR} w-[35px] ${open ? "opacity-0" : ""}`} />
-        <span className={`${BAR} ${open ? "w-[29px] -translate-y-[10px] rotate-45" : "w-[35px]"}`} />
+        <span className="relative block h-[35px] w-[35px]">
+          <span
+            className={`${BAR} ${
+              open
+                ? "w-[28px] translate-x-[3.5px] -rotate-[135deg]"
+                : "w-[35px] -translate-y-[9.5px]"
+            }`}
+          />
+          <span className={`${BAR} w-[35px] ${open ? "scale-0" : ""}`} />
+          <span
+            className={`${BAR} ${
+              open
+                ? "w-[28px] translate-x-[3.5px] rotate-[135deg]"
+                : "w-[35px] translate-y-[9.5px]"
+            }`}
+          />
+        </span>
       </button>
 
       <div
