@@ -13,21 +13,26 @@
    All headings sit at -0.01em tracking.
    ========================================================================== */
 @theme {
-  /* --- Reference palette ------------------------------------------------ */
-  --color-cream: #f6f4ee; /* page background */
-  --color-white: #ffffff; /* alternating sections */
-  --color-sand: #e3d9ca; /* "How we work" band */
-  --color-ink: #2b2b2b; /* headings and body copy */
-  --color-teal: #86b3b3; /* accent — script words, utility bar */
-  --color-rule: #515151; /* underline on link-buttons */
+  /* --- "Morning Light" palette -------------------------------------------
+     Read off sunlight falling through a wood: deep evergreen in shadow,
+     moss and sage where the light lands, warm sun on the page itself. */
+  --color-ink: #21302a; /* deep evergreen — headings, dark bands */
+  --color-forest: #3c5245; /* body copy */
+  --color-moss: #6c8271; /* muted UI, utility bar */
+  --color-sage: #a9bfae; /* rules and quiet accents */
+  --color-mist: #dce5db; /* soft green surface */
+  --color-sun: #c1813c; /* accent — links, buttons, accent words */
+  --color-sun-soft: #e6bd85; /* light shafts and glows */
+  --color-cream: #f8f4ea; /* page background */
+  --color-white: #fdfbf6; /* alternating sections */
+  --color-rule: #6c8271; /* underline on link-buttons */
 
   /* --- Type families ----------------------------------------------------
      The reference's own faces, all loaded from public/font: Beaufort Pro
      Light for headings, Muli for body and UI text, PrintedMoments for the
      handwritten accent words. */
-  --font-display: var(--font-beaufort), Georgia, "Times New Roman", serif;
-  --font-body: var(--font-muli), ui-sans-serif, system-ui, sans-serif;
-  --font-script: var(--font-printed-moments), "Brush Script MT", cursive;
+  --font-display: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  --font-body: var(--font-karla), ui-sans-serif, system-ui, sans-serif;
 
   /* --- Type scale --------------------------------------------------------
      The reference's own formula for screens 768px and up (and phones held
@@ -83,7 +88,7 @@
 
   body {
     background: var(--color-cream);
-    color: var(--color-ink);
+    color: var(--color-forest);
     font-family: var(--font-body);
     font-size: var(--text-body);
     line-height: 1.8;
@@ -98,6 +103,7 @@
     font-family: var(--font-display);
     font-weight: 300;
     letter-spacing: -0.01em;
+    color: var(--color-ink);
   }
 
   h1 {
@@ -122,7 +128,7 @@
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-teal);
+    outline: 2px solid var(--color-sun);
     outline-offset: 3px;
   }
 }
@@ -150,15 +156,16 @@
     line-height: 1.3;
   }
 
-  /* The handwritten accent inside a heading — the reference's own rule:
-     PrintedMoments at 1em, no tracking, 0.7em leading. */
+  /* The accent word inside a heading. Where the reference used a handwritten
+     face, this theme leans on Fraunces' italic in sunlight gold — lighter in
+     feel, and one less font to load. */
   .script-accent {
-    font-family: var(--font-script);
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 300;
     font-size: 1em;
     letter-spacing: 0;
-    line-height: 0.7;
-    color: var(--color-teal);
-    font-style: normal;
+    color: var(--color-sun);
   }
 
   /* Underlined uppercase link-button. As on the reference, the underline is
@@ -214,8 +221,126 @@
       color 0.1s linear;
   }
   .btn-oval:hover {
-    background: var(--color-ink);
+    background: green;
     color: var(--color-cream);
+  }
+}
+
+/* --- Light -----------------------------------------------------------------
+   The site's signature: late sun. `.sun-wash` is the quiet version — a warm
+   glow low in a section's top corner, behind the content. `.sun-burst` is the
+   full effect used on Our Office: a bright point in the top-right corner with
+   rays fanning out of it, drawn *over* the content and turning slowly about
+   that corner. Both ignore the pointer. */
+.sun-burst,
+.sun-wash {
+  position: relative;
+  isolation: isolate;
+}
+
+.sun-wash::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    62% 66% at 4% -8%,
+    color-mix(in srgb, var(--color-sun-soft) 62%, transparent),
+    transparent 70%
+  );
+}
+
+/* The angle the fan is turned to. Animating the gradient's own starting angle
+   (rather than rotating the element) keeps the layer sitting exactly over the
+   section, so rays cover it at every point of the turn instead of swinging
+   out of frame. */
+@property --ray-rot {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+/* The fan of rays: a conic gradient centred on the section's top-right
+   corner, so every ray leaves that one point. The gradient never reaches
+   transparent — it drifts between a faint base and slightly brighter rays, so
+   the light is continuous and the rays only read as variations within it. Two
+   masks are intersected: one fading the light with distance, one holding it
+   to the centre-right, so the copy on the left stays clear. `screen` keeps
+   anything underneath legible. */
+.sun-burst::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  background: repeating-conic-gradient(
+    from var(--ray-rot) at 100% 0%,
+    color-mix(in srgb, var(--color-sun-soft) 28%, transparent) 0deg,
+    color-mix(in srgb, var(--color-sun-soft) 46%, transparent) 4.5deg,
+    color-mix(in srgb, var(--color-sun-soft) 31%, transparent) 8deg,
+    color-mix(in srgb, var(--color-sun-soft) 41%, transparent) 13deg,
+    color-mix(in srgb, var(--color-sun-soft) 28%, transparent) 18deg
+  );
+  /* Softens the ray edges, which would otherwise shimmer as they turn. */
+  filter: blur(2px);
+  mask-image:
+    radial-gradient(135% 135% at 100% 0%, #000 6%, rgba(0, 0, 0, 0.55) 42%, transparent 88%),
+    linear-gradient(to right, transparent 42%, #000 76%);
+  mask-composite: intersect;
+  mix-blend-mode: screen;
+  animation: ray-turn 90s linear infinite;
+}
+
+/* The source itself: a soft warm core in the corner. */
+.sun-burst::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  background: radial-gradient(
+    44% 52% at 100% 0%,
+    color-mix(in srgb, #fff6e2 48%, transparent),
+    color-mix(in srgb, var(--color-sun-soft) 30%, transparent) 26%,
+    transparent 68%
+  );
+  mix-blend-mode: screen;
+}
+
+/* Phones: the section is one column, so there is no left-hand copy to keep
+   clear — the light spreads across the whole width instead of a narrow strip
+   down the right, and runs a little stronger, since a 390px-wide section only
+   catches a thin slice of the fan. */
+@media (width < 64rem) {
+  .sun-burst::before {
+    background: repeating-conic-gradient(
+      from var(--ray-rot) at 100% 0%,
+      color-mix(in srgb, var(--color-sun-soft) 16%, transparent) 0deg,
+      color-mix(in srgb, var(--color-sun-soft) 38%, transparent) 4.5deg,
+      color-mix(in srgb, var(--color-sun-soft) 20%, transparent) 8deg,
+      color-mix(in srgb, var(--color-sun-soft) 30%, transparent) 13deg,
+      color-mix(in srgb, var(--color-sun-soft) 16%, transparent) 18deg
+    );
+    mask-image: radial-gradient(
+      150% 90% at 100% 0%,
+      #000 8%,
+      rgba(0, 0, 0, 0.6) 45%,
+      transparent 92%
+    );
+  }
+}
+
+/* One unbroken turn about the corner the light comes from. */
+@keyframes ray-turn {
+  to {
+    --ray-rot: 360deg;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sun-burst::before {
+    animation: none;
   }
 }
 

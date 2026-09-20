@@ -13,6 +13,10 @@ import { useEffect, useState } from "react";
 
 type NavItem = { label: string; items?: string[] };
 
+/* "Our Office" → #office, "About" → #about, matching the section ids. */
+const sectionHref = (label: string) =>
+  `#${label.toLowerCase().replace(/^our /, "").replace(/\s+/g, "-")}`;
+
 /* The reference's own burger: three 1px rules centred in a 35px box, the
    outer two held ±9.5px apart. Opening shrinks them to 28px and spins them
    -135°/135° (nudged 3.5px right so they stay centred as they shorten) while
@@ -127,7 +131,11 @@ export default function MobileMenu({ nav }: { nav: NavItem[] }) {
                       <Chevron />
                     </button>
                   ) : (
-                    <a href="#" className="menu-item block w-full px-[10vw]">
+                    <a
+                      href={sectionHref(item.label)}
+                      onClick={close}
+                      className="menu-item block w-full px-[10vw]"
+                    >
                       {item.label}
                     </a>
                   )}
@@ -158,7 +166,8 @@ export default function MobileMenu({ nav }: { nav: NavItem[] }) {
                 {folder?.items?.map((sub) => (
                   <li key={sub}>
                     <a
-                      href="#"
+                      href="#specialties"
+                      onClick={close}
                       className="menu-item block px-[10vw]"
                       tabIndex={folder ? 0 : -1}
                     >
@@ -180,8 +189,9 @@ export default function MobileMenu({ nav }: { nav: NavItem[] }) {
           }}
         >
           <a
-            href="#"
-            className="btn-oval block w-[210px] text-center hover:text-white"
+            href="#contact"
+            onClick={close}
+            className="btn-oval block w-[210px] text-center hover:text-cream"
             tabIndex={open ? 0 : -1}
           >
             Contact

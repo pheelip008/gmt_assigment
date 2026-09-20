@@ -1,44 +1,49 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
+import { Fraunces, Karla } from "next/font/google";
 import "./globals.css";
+import { practice } from "@/lib/content";
 
-/* Beaufort Pro Light — the reference site's heading face, in the 300
-   weight it sets every heading in. */
-const beaufort = localFont({
-  src: "../public/font/fonts/fonnts.com-Beaufort-Pro-Light.otf",
-  weight: "300",
-  style: "normal",
-  variable: "--font-beaufort",
-  display: "swap",
-  adjustFontFallback: "Times New Roman",
-});
-
-/* PrintedMoments — the reference's handwritten accent face ("thrive",
-   "help", …). */
-const printedMoments = localFont({
-  src: "../public/font/fonts/printedmoments-webfont.woff",
-  weight: "400",
-  style: "normal",
-  variable: "--font-printed-moments",
-  display: "swap",
-  adjustFontFallback: false,
-});
-
-/* Muli — the reference's body and UI face, as a variable font (200–900). */
-const muli = localFont({
-  src: "../public/font/fonts/latin.woff2",
-  weight: "200 900",
-  style: "normal",
-  variable: "--font-muli",
+/* Fraunces — a soft, warm serif for headings and for the italic accent
+   words. Its light weights keep the headings airy rather than heavy. */
+const fraunces = Fraunces({
+  subsets: ["latin"],
+  weight: ["300", "400"],
+  style: ["normal", "italic"],
+  variable: "--font-fraunces",
   display: "swap",
 });
+
+/* Karla — an open, humanist sans for body copy and UI labels. */
+const karla = Karla({
+  subsets: ["latin"],
+  weight: ["300", "400", "500"],
+  variable: "--font-karla",
+  display: "swap",
+});
+
+const title = `${practice.name}, ${practice.credential} — Anxiety & Trauma Therapy in ${practice.city}, ${practice.region}`;
+const description = `${practice.role} in ${practice.city}, California. Evidence-based therapy for anxiety, panic, trauma and burnout — in person in ${practice.city} or by secure telehealth across ${practice.regionName}.`;
 
 export const metadata: Metadata = {
-  title: "Part 1 — Homepage replication",
-  description:
-    "Assignment stage 1: a layout, spacing and structure replication of the Conejo Valley Family Counseling homepage, rebuilt with Next.js and Tailwind CSS.",
-  // This page reproduces another practice's homepage as a front-end exercise.
-  // It must never compete with them in search results.
+  title,
+  description,
+  keywords: [
+    `therapist ${practice.city}`,
+    `anxiety therapy ${practice.city}`,
+    "trauma therapy",
+    "EMDR",
+    "burnout therapy",
+    `psychologist ${practice.city} ${practice.region}`,
+    `online therapy ${practice.regionName}`,
+  ],
+  openGraph: {
+    title,
+    description,
+    type: "website",
+    locale: "en_US",
+  },
+  // A fictional practice built for an assignment: it must not turn up in
+  // search results as if it were a real one.
   robots: { index: false, follow: false, nocache: true },
 };
 
@@ -47,11 +52,8 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     /* Font variables sit on <html> so Tailwind's @theme block — which declares
-       --font-display/body/script on :root — can resolve them. */
-    <html
-      lang="en"
-      className={`${beaufort.variable} ${muli.variable} ${printedMoments.variable}`}
-    >
+       --font-display/body on :root — can resolve them. */
+    <html lang="en" className={`${fraunces.variable} ${karla.variable}`}>
       <body className="antialiased">{children}</body>
     </html>
   );
